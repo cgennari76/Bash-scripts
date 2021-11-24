@@ -1,3 +1,5 @@
+#!/bin/sh
+#check the packages on each server cat /var/log/apt/history.log
 log="/tmp/apt-get.log"
 >"${log}"
 for s in $(cat servers.txt )
