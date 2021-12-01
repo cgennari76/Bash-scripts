@@ -28,16 +28,14 @@ database_name="travel_list"
 database_user="travel_user"
 database_pwd="password"
 
-#make backup directory
-path="$dest$day"
-mkdir -p $dest/$day
-
 # Print start status message.
 echo "Backing up $backup_files to $dest$day"
 date
 echo
 
-# Backup the files using tar.
+#Make the backup directory, dump mysql, and gzip a backup file of the app
+path="$dest$day"
+mkdir -p $dest$day
 mysqldump -u $database_user $database_name > $dest$day/$archive_file.sql
 tar czf $dest$day/$archive_file.tgz $backup_files
 
@@ -47,7 +45,7 @@ old_path="$dest$old_date"
 rm -rf $old_path > /dev/null 2>&1
 
 #copy to remote directory backup
-scp -i $key_file $dest$day/$archive_file chris@$server_name:$dest$day
+scp -i $key_file $dest$day chris@$server_name:$dest$day
 
 #Print end status message.
 echo
