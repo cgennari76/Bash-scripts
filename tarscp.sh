@@ -22,6 +22,7 @@ name="my_app"
 day=$(date +%m%d%y)
 time=$(date +%H:%M)
 archive_file="$name-$day-$time"
+retention_days=10
 
 #database connection
 database_name="travel_list"
