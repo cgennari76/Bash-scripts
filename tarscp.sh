@@ -19,14 +19,14 @@ server_name="ubu18servweb06"
 
 # Create archive filename.
 name="my_app"
-day=$(date +%d-%m-%y)
-time=$(date +%H-%M)
+day=$(date +%m%d%y)
+time=$(date +%H:%M)
 archive_file="$name-$day-$time"
 
 #database connection
 database_name="travel_list"
-database_user="travel_user"
-database_pwd="password"
+database_user="backup_user"
+database_pwd="backup1"
 
 # Print start status message.
 echo "Backing up $backup_files to $dest$day"
@@ -35,17 +35,17 @@ echo
 
 #Make the backup directory, dump mysql, and gzip a backup file of the app
 path="$dest$day"
-mkdir -p $dest$day
-mysqldump -u $database_user $database_name > $dest$day/$archive_file.sql
-tar czf $dest$day/$archive_file.tgz $backup_files
+mkdir -p $path
+mysqldump -u $database_user -p$database_pwd -h localhost $database_name > $path/"$archive_file".sql
+tar czf $path/"$archive_file".tgz $backup_files
+
+#copy to remote directory backup
+scp -r -i $key_file $path chris@$server_name:$path
 
 #applying retention
 old_date=`date --date="$retention_days day ago" +%d-%m-%y`
 old_path="$dest$old_date"
 rm -rf $old_path > /dev/null 2>&1
-
-#copy to remote directory backup
-scp -i $key_file $dest$day chris@$server_name:$dest$day
 
 #Print end status message.
 echo
